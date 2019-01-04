@@ -19,6 +19,7 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mPreButton;
 
     private static final String TAG = "QuizActivity";
+    private static final String KEY_INDEX = "index";
 
     private TextView mQuestionTextView;
 
@@ -39,6 +40,9 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(activity_quiz);
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX);
+        }
 
         mTrueButton = findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(
@@ -123,9 +127,17 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy() called");
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState");
+        outState.putInt(KEY_INDEX, mCurrentIndex);
+    }
+
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+        
     }
 
     private void checkAnswer(boolean userPressedTrue) {
@@ -137,5 +149,12 @@ public class QuizActivity extends AppCompatActivity {
             messageResId = R.string.incorrect_toast;
         }
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
+        changeButtonStatus(false);
+    }
+
+    private void changeButtonStatus(boolean status) {
+        mTrueButton.setEnabled(status);
+        mFalseButton.setEnabled(status);
     }
 }
+
