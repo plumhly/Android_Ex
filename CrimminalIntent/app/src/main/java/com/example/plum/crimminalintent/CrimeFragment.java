@@ -108,6 +108,12 @@ public class CrimeFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
     private void update() {
         mDateButton.setText(mCrime.getDate().toString());
     }
