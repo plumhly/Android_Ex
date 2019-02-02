@@ -2,7 +2,7 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.plum.crimminalintent">
-
+    <uses-feature android:name="android.hardware.camera2" android:required="false"></uses-feature>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,6 +18,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".CrimePagerActivity" android:parentActivityName=".CrimeListActivity"></activity>
+        <provider
+            android:authorities="com.example.plum.crimminalintent.fileprovider"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false" android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/files"></meta-data>
+        </provider>
     </application>
 
 </manifest>
