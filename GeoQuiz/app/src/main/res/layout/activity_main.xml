@@ -24,10 +24,21 @@
             android:text="@string/false_button"
             android:id="@+id/false_button"/>
     </LinearLayout>
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/next_button"
-        android:drawableRight="@drawable/arrow_right"
-        android:text="@string/next_button"/>
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pre_button"
+            android:drawableLeft="@drawable/arrow_left"
+            android:text="@string/pre_button"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/next_button"
+            android:drawableRight="@drawable/arrow_right"
+            android:text="@string/next_button"/>
+    </LinearLayout>
 </LinearLayout>
