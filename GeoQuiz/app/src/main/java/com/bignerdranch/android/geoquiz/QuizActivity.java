@@ -32,6 +32,7 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     private int mCurrentIndex = 0;
+    private int correctNumber = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkAnswer(true);
+                setButtons(false);
             }
         });
         mFalseButton = findViewById(R.id.false_button);
@@ -55,6 +57,7 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkAnswer(false);
+                setButtons(false);
 //                toast.setGravity(Gravity.TOP, 0, 0);
 //                toast.show();
             }
@@ -69,8 +72,14 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 updateQuestion();
+                setButtons(true);
             }
         });
+    }
+
+    private void setButtons(boolean enable) {
+        mTrueButton.setEnabled(enable);
+        mFalseButton.setEnabled(enable);
     }
 
     @Override
@@ -113,10 +122,16 @@ public class QuizActivity extends AppCompatActivity {
         int messageId = 0;
         if (userPressedTrue == answer) {
             messageId = R.string.correct_toast;
+            correctNumber++;
         } else {
             messageId = R.string.incorrect_toast;
         }
-        Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
+        if (mCurrentIndex == mQuestionBank.length - 1) {
+            int percent = (int)((double)mCurrentIndex / mQuestionBank.length * 100);
+            Toast.makeText(this,  percent + "%", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
