@@ -3,6 +3,8 @@ package com.bignerdranch.android.criminalintent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +25,9 @@ public class CrimePagerActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
 
+    private Button mPreButton;
+    private Button mNextButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,11 +36,45 @@ public class CrimePagerActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.crime_pager);
         mCrimes = CrimeLab.get(this).getCrimes();
 
+        mPreButton = findViewById(R.id.crime_pre);
+        mPreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(0);
+            }
+        });
+
+        mNextButton = findViewById(R.id.crime_next);
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(mCrimes.size() - 1);
+            }
+        });
+
         FragmentManager fm = getSupportFragmentManager();
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mPreButton.setEnabled(position != 0);
+                mNextButton.setEnabled(position != mCrimes.size() - 1);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @NonNull
             @Override
             public Fragment getItem(int position) {
+
                 Crime crime = mCrimes.get(position);
                 return  CrimeFragment.newInstance(crime.getId());
             }
@@ -57,5 +96,10 @@ public class CrimePagerActivity extends AppCompatActivity {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
         intent.putExtra(EXTRA_CRIME_ID, crimeId);
         return intent;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
