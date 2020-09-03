@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import java.util.List;
 
@@ -19,6 +20,9 @@ public class CrimeListFragment extends Fragment {
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+    private static final int NORMAL = 0;
+    private static final int POLICE = 1;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,7 +41,25 @@ public class CrimeListFragment extends Fragment {
         mCrimeRecyclerView.setAdapter(mAdapter);
     }
 
-    private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class CrimePoliceHolder extends ViewHolder {
+        private TextView mTitleView;
+        private TextView mDateView;
+        private Crime mCrime;
+
+        public CrimePoliceHolder(LayoutInflater inflater, ViewGroup parent) {
+            super(inflater.inflate(R.layout.list_item_police_crime, parent, false));
+            mTitleView = itemView.findViewById(R.id.crime_title);
+            mDateView = itemView.findViewById(R.id.crime_date);
+        }
+
+        public void bind(Crime crime) {
+            mCrime = crime;
+            mTitleView.setText(mCrime.getTittle());
+            mDateView.setText(mCrime.getDate().toString());
+        }
+    }
+
+    private class CrimeHolder extends ViewHolder implements View.OnClickListener {
         private TextView mTitleView;
         private TextView mDateView;
         private Crime mCrime;
@@ -61,7 +83,7 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
+    private class CrimeAdapter extends RecyclerView.Adapter<ViewHolder> {
         private List<Crime> mCrimes;
 
         public CrimeAdapter(List<Crime> crimes) {
@@ -70,15 +92,29 @@ public class CrimeListFragment extends Fragment {
 
         @NonNull
         @Override
-        public CrimeHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new CrimeHolder(layoutInflater, viewGroup);
+            if (viewType == POLICE) {
+                return new CrimePoliceHolder(layoutInflater, viewGroup);
+            } else {
+                return new CrimeHolder(layoutInflater, viewGroup);
+            }
         }
 
         @Override
-        public void onBindViewHolder(@NonNull CrimeHolder crimeHolder, int i) {
+        public int getItemViewType(int position) {
+            Crime crime = mCrimes.get(position);
+            return crime.isNeedPolice() ? POLICE : NORMAL;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder crimeHolder, int i) {
             Crime crime = mCrimes.get(i);
-            crimeHolder.bind(crime);
+            if (crimeHolder instanceof CrimeHolder) {
+                ((CrimeHolder) crimeHolder).bind(crime);
+            } else {
+                ((CrimePoliceHolder) crimeHolder).bind(crime);
+            }
         }
 
         @Override
