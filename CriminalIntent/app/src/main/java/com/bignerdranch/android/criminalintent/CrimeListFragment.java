@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.UUID;
 
 public class CrimeListFragment extends Fragment {
 
+    private static final int CRIME_REQUEST = 0;
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     @Nullable
@@ -41,12 +43,6 @@ public class CrimeListFragment extends Fragment {
         } else {
             mAdapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateUI();
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -73,7 +69,17 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
-            startActivity(intent);
+            startActivityForResult(intent, CRIME_REQUEST);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CRIME_REQUEST) {
+            if (data == null) return;
+            UUID crimeId = CrimeFragment.crimeId(data);
+            int index = CrimeLab.get(getActivity()).index(crimeId);
+            mAdapter.notifyItemChanged(index);
         }
     }
 

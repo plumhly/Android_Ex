@@ -31,6 +31,19 @@ public class CrimeLab {
         return mCrimes;
     }
 
+    public int index(Crime crime) {
+       return mCrimes.indexOf(crime);
+    }
+
+    public int index(UUID crimeId) {
+        for (int i = 0; i < mCrimes.size(); i++) {
+            if (mCrimes.get(i).getId().equals(crimeId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public Crime getCrime(UUID id) {
         for (Crime crime : mCrimes) {
             if (crime.getId().equals(id)) {

@@ -1,5 +1,7 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -67,10 +69,22 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                setResult();
             }
         });
 
         return v;
+    }
+
+    private void setResult() {
+        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        Intent intent = new Intent();
+        intent.putExtra(ARG_CRIME_ID, crimeId);
+        getActivity().setResult(Activity.RESULT_OK, intent);
+    }
+
+    public static UUID crimeId(Intent intent) {
+        return (UUID) intent.getSerializableExtra(ARG_CRIME_ID);
     }
 
     public static CrimeFragment newInstance(UUID crimeID) {
@@ -80,4 +94,5 @@ public class CrimeFragment extends Fragment {
         crimeFragment.setArguments(argBundle);
         return crimeFragment;
     }
+
 }
