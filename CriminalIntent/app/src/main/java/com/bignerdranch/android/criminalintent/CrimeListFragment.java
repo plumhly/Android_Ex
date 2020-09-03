@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,12 +41,14 @@ public class CrimeListFragment extends Fragment {
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitleView;
         private TextView mDateView;
+        private ImageView mImageView;
         private Crime mCrime;
 
         public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_crime, parent, false));
             mTitleView = itemView.findViewById(R.id.crime_title);
             mDateView = itemView.findViewById(R.id.crime_date);
+            mImageView = itemView.findViewById(R.id.crime_solved);
             itemView.setOnClickListener(this);
         }
 
@@ -53,6 +56,7 @@ public class CrimeListFragment extends Fragment {
             mCrime = crime;
             mTitleView.setText(mCrime.getTittle());
             mDateView.setText(mCrime.getDate().toString());
+            mImageView.setVisibility(mCrime.isSolved() ? View.VISIBLE : View.GONE);
         }
 
         @Override
