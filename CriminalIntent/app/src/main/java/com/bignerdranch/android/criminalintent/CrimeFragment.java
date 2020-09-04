@@ -89,6 +89,12 @@ public class CrimeFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode != Activity.RESULT_OK) return;
         if (requestCode != REQUEST_DATA) return;
