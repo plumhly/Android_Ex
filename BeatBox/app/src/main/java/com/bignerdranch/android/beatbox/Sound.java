@@ -3,6 +3,7 @@ package com.bignerdranch.android.beatbox;
 public class Sound {
     private String mAssetPath;
     private String nName;
+    private Integer mSoundId;
 
     public Sound(String assetPath) {
         mAssetPath = assetPath;
@@ -17,6 +18,14 @@ public class Sound {
 
     public String getnName() {
         return nName;
+    }
+
+    public Integer getSoundId() {
+        return mSoundId;
+    }
+
+    public void setSoundId(Integer soundId) {
+        mSoundId = soundId;
     }
 }
 
